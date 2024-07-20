@@ -1,0 +1,184 @@
+{
+	"info": {
+		"_postman_id": "4e2206bc-af8d-4556-b57b-1b26e4b8ea0b",
+		"name": "Library",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add_Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "675cd69d-b63e-4f0d-ae5a-59cc629fe4cb",
+						"exec": [
+							"const jsonData =pm.response.json();\r",
+							"\r",
+							"console.log(jsonData.ID);\r",
+							"const bookID = jsonData.ID;\r",
+							"pm.environment.set(\"book_id\",bookID);\r",
+							"\r",
+							"\r",
+							"pm.test(\"verifying status code is 200\",function()\r",
+							"{\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(jsonData).have.property(\"Msg\");\r",
+							"    pm.expect(jsonData.Msg).to.eql(\"successfully added\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd0ecd0d-d6d2-4ea9-a06d-a835d3c44718",
+						"exec": [
+							"console.log(pm.globals.get(\"companyCode\"));\r",
+							"const code = pm.globals.get(\"companyCode\");\r",
+							"const val = pm.variables.replaceIn('{{$randomInt}}');\r",
+							"pm.collectionVariables.set(\"isbn\",code+val);\r",
+							"pm.collectionVariables.get(\"authorName\");\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "acfe5dac-279e-4fda-8afc-b2b0d9900817",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"name\":\"Appium Automation with Java\", \r\n    \"isbn\":\"{{isbn}}\",\r\n    \"aisle\":\"811\",\r\n    \"author\":\"{{authorName}}\" \r\n\r\n} ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_uri}}/Library/Addbook.php"
+			},
+			"response": []
+		},
+		{
+			"name": "Get_Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "67a9a964-a513-4dcb-86f5-166a5555c9bf",
+						"exec": [
+							"const getBookResponse = pm.response.json();\r",
+							"console.log(getBookResponse);\r",
+							"pm.expect(getBookResponse[0].author).to.eql(pm.collectionVariables.get(\"authorName\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "b3b2a90a-af2c-4fff-b33e-d5f506344744",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/ecmascript",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_uri}}/Library/GetBook.php?ID={{book_id}}",
+					"host": [
+						"{{base_uri}}"
+					],
+					"path": [
+						"Library",
+						"GetBook.php"
+					],
+					"query": [
+						{
+							"key": "ID",
+							"value": "{{book_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_Book",
+			"id": "74ec82b7-48cc-4d3c-9b27-c98916766a35",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ID\": \"{{book_id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_uri}}/Library/DeleteBook.php"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7dbfeec8-509e-4bfb-a0e9-1bfd5914ccca",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "5cdbab9e-d3ba-4ca2-8656-53c1ad41331e",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "isbn",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "book_id",
+			"value": ""
+		},
+		{
+			"key": "authorName",
+			"value": "K S Soni",
+			"type": "string"
+		}
+	]
+}
